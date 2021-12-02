@@ -511,19 +511,20 @@ class ObjectDB:
             )
         else:
             traverse_weight = traverse_pages
-        if len(hashes) < traverse_weight and not always_traverse:
-            logger.debug(
-                "Large remote ('{}' hashes < '{}' traverse weight), "
-                "using object_exists for remaining hashes".format(
-                    len(hashes), traverse_weight
-                )
+        # TODO: Turn traverse back on when it is fixed
+        # if len(hashes) < traverse_weight and not always_traverse:
+        logger.debug(
+            "Large remote ('{}' hashes < '{}' traverse weight), "
+            "using object_exists for remaining hashes".format(
+                len(hashes), traverse_weight
             )
-            return list(hashes & remote_hashes) + self.list_hashes_exists(
-                hashes - remote_hashes, jobs, name
-            )
-
-        logger.debug(f"Querying '{len(hashes)}' hashes via traverse")
-        remote_hashes = set(
-            self.list_hashes_traverse(remote_size, remote_hashes, jobs, name)
         )
-        return list(hashes & set(remote_hashes))
+        return list(hashes & remote_hashes) + self.list_hashes_exists(
+            hashes - remote_hashes, jobs, name
+        )
+
+        # logger.debug(f"Querying '{len(hashes)}' hashes via traverse")
+        # remote_hashes = set(
+        #     self.list_hashes_traverse(remote_size, remote_hashes, jobs, name)
+        # )
+        # return list(hashes & set(remote_hashes))
